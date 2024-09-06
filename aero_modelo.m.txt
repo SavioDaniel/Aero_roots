@@ -1,0 +1,581 @@
+clc; clear all; close all;
+
+% DIRETORIA DE CARGAS - DETERMINAÇÃO DOS CENTROS DE GRAVIDADE
+
+
+%% PERFIS AERODINÂMICOS
+
+naca0012=[0	0.0005839	0.0023342	0.0052468	0.0093149	0.0145291	0.0208771	0.0283441	0.0369127	0.0465628	0.0572720	0.0690152	0.0817649	0.0954915	0.1101628	0.1257446	0.1422005	0.1594921	0.1775789	0.1964187	0.2159676	0.2361799	0.2570083	0.2784042	0.3003177	0.3226976	0.3454915	0.3686463	0.3921079	0.4158215	0.4397317	0.4637826	0.4879181	0.5120819	0.5362174	0.5602683	0.5841786	0.6078921	0.6313537	0.6545085	0.6773025	0.6996823	0.7215958	0.7429917	0.7638202	0.7840324	0.8035813	0.8224211	0.8405079	0.8577995	0.8742554	0.8898372	0.9045085	0.9182351	0.9309849	0.9427280	0.9534372	0.9630873	0.9716559	0.9791229	0.9854709	0.9906850	0.9947532	0.9976658	0.9994161	1	0.0000000	0.0005839	0.0023342	0.0052468	0.0093149	0.0145291	0.0208771	0.0283441	0.0369127	0.0465628	0.0572720	0.0690152	0.0817649	0.0954915	0.1101628	0.1257446	0.1422005	0.1594921	0.1775789	0.1964187	0.2159676	0.2361799	0.2570083	0.2784042	0.3003177	0.3226976	0.3454915	0.3686463	0.3921079	0.4158215	0.4397317	0.4637826	0.4879181	0.5120819	0.5362174	0.5602683	0.5841786	0.6078921	0.6313537	0.6545085	0.6773025	0.6996823	0.7215958	0.7429917	0.7638202	0.7840324	0.8035813	0.8224211	0.8405079	0.8577995	0.8742554	0.8898372	0.9045085	0.9182351	0.9309849	0.9427280	0.9534372	0.9630873	0.9716559	0.9791229	0.9854709	0.9906850	0.9947532	0.9976658	0.9994161	1;0	0.0042603	0.0084289	0.0125011	0.0164706	0.0203300	0.0240706	0.0276827	0.0311559	0.0344792	0.0376414	0.0406310	0.0434371	0.0460489	0.0484567	0.0506513	0.0526251	0.0543715	0.0558856	0.0571640	0.0582048	0.0590081	0.0595755	0.0599102	0.0600172	0.0599028	0.0595747	0.0590419	0.0583145	0.0574033	0.0563200	0.0550769	0.0536866	0.0521620	0.0505161	0.0487619	0.0469124	0.0449802	0.0429778	0.0409174	0.0388109	0.0366700	0.0345058	0.0323294	0.0301515	0.0279828	0.0258337	0.0237142	0.0216347	0.0196051	0.0176353	0.0157351	0.0139143	0.0121823	0.0105485	0.0090217	0.0076108	0.0063238	0.0051685	0.0041519	0.0032804	0.0025595	0.0019938	0.0015870	0.0013419	0.0012600	0.0000000	-.0042603	-.0084289	-.0125011	-.0164706	-.0203300	-.0240706	-.0276827	-.0311559	-.0344792	-.0376414	-.0406310	-.0434371	-.0460489	-.0484567	-.0506513	-.0526251	-.0543715	-.0558856	-.0571640	-.0582048	-.0590081	-.0595755	-.0599102	-.0600172	-.0599028	-.0595747	-.0590419	-.0583145	-.0574033	-.0563200	-.0550769	-.0536866	-.0521620	-.0505161	-.0487619	-.0469124	-.0449802	-.0429778	-.0409174	-.0388109	-.0366700	-.0345058	-.0323294	-.0301515	-.0279828	-.0258337	-.0237142	-.0216347	-.0196051	-.0176353	-.0157351	-.0139143	-.0121823	-.0105485	-.0090217	-.0076108	-.0063238	-.0051685	-.0041519	-.0032804	-.0025595	-.0019938	-.0015870	-.0013419	-.0012600];
+% x_loop = [x, x(1)]; % Adiciona o primeiro ponto ao final
+% y_loop = [y, y(1)]; % Adiciona o primeiro ponto ao final
+
+naca0009=[1	0.99572	0.98296	0.96194	0.93301	0.89668	0.85355	0.80438	0.75000	0.69134	0.62941	0.56526	0.50000	0.43474	0.37059	0.33928	0.30866	0.27886	0.25000	0.22221	0.19562	0.17033	0.14645	0.12408	0.10332	0.08427	0.06699	0.05156	0.03806	0.02653	0.01704	0.00961	0.00428	0.00107	0.0	0.00107	0.00428	0.00961	0.01704	0.02653	0.03806	0.05156	0.06699	0.08427	0.10332	0.12408	0.14645	0.17033	0.19562	0.22221	0.25000	0.27886	0.30866	0.33928	0.37059	0.43474	0.50000	0.56526	0.62941	0.69134	0.75000	0.80438	0.85355	0.89668	0.93301	0.96194	0.98296	0.99572	1; 0	0.00057	0.00218	0.00463	0.00770	0.01127	0.01522	0.01945	0.02384	0.02823	0.03247	0.03638	0.03978	0.04248	0.04431	0.04484	0.04509	0.04504	0.04466	0.04397	0.04295	0.04161	0.03994	0.03795	0.03564	0.03305	0.03023	0.02720	0.02395	0.02039	0.01646	0.01214	0.00767	0.00349	0.0	-0.00349	-0.00767	-0.01214	-0.01646	-0.02039	-0.02395	-0.02720	-0.03023	-0.03305	-0.03564	-0.03795	-0.03994	-0.04161	-0.04295	-0.04397	-0.04466	-0.04504	-0.04509	-0.04484	-0.04431	-0.04248	-0.03978	-0.03638	-0.03247	-0.02823	-0.02384	-0.01945	-0.01522	-0.01127	-0.00770	-0.00463	-0.00218	-0.00057	0.0];
+
+selig1223=[1	0.99838	0.99417	0.98825	0.98075	0.97111	0.95884	0.94389	0.92639	0.90641	0.88406	0.85947	0.83277	0.80412	0.77369	0.74166	0.70823	0.67360	0.63798	0.60158	0.56465	0.52744	0.49025	0.45340	0.41721	0.38193	0.34777	0.31488	0.28347	0.25370	0.22541	0.19846	0.17286	0.14863	0.12591	0.10482	0.08545	0.06789	0.05223	0.03855	0.02694	0.01755	0.01028	0.00495	0.00155	0.00005	0.00044	0.00264	0.00789	0.01718	0.03006	0.04627	0.06561	0.08787	0.11282	0.14020	0.17006	0.20278	0.23840	0.27673	0.31750	0.36044	0.40519	0.45139	0.49860	0.54639	0.59428	0.64176	0.68832	0.73344	0.77660	0.81729	0.85500	0.88928	0.91966	0.94573	0.96693	0.98255	0.99268	0.99825	1; 0	0.00126	0.00494	0.01037	0.01646	0.02250	0.02853	0.03476	0.04116	0.04768	0.05427	0.06089	0.06749	0.07402	0.08044	0.08671	0.09277	0.09859	0.10412	0.10935	0.11425	0.11881	0.12303	0.12683	0.13011	0.13271	0.13447	0.13526	0.13505	0.13346	0.13037	0.12594	0.12026	0.11355	0.10598	0.09770	0.08879	0.07940	0.06965	0.05968	0.04966	0.03961	0.02954	0.01969	0.01033	0.00178	-0.00561	-0.01120	-0.01427	-0.01550	-0.01584	-0.01532	-0.01404	-0.01202	-0.00925	-0.00563	-0.00075	0.00535	0.01213	0.01928	0.02652	0.03358	0.04021	0.04618	0.05129	0.05534	0.05820	0.05976	0.05994	0.05872	0.05612	0.05219	0.04706	0.04088	0.03387	0.02624	0.01822	0.01060	0.00468	0.00115	0.00000];
+eppler423=[1	0.99655	0.98706	0.97304	0.95530	0.93358	0.90734	0.87671	0.84221	0.80436	0.76373	0.72090	0.67644	0.63092	0.58491	0.53893	0.49347	0.44870	0.40464	0.36149	0.31947	0.27885	0.23987	0.20286	0.16816	0.13611	0.10700	0.08106	0.05852	0.03953	0.02421	0.01262	0.00481	0.00071	0.00002	0.00033	0.00071	0.00125	0.00157	0.00194	0.00237	0.00288	0.00348	0.00415	0.00571	0.00751	0.01065	0.01365	0.02892	0.04947	0.07533	0.10670	0.14385	0.18727	0.23688	0.29196	0.35163	0.41449	0.47867	0.54275	0.60579	0.66690	0.72503	0.77912	0.82836	0.87219	0.91012	0.94179	0.96692	0.98519	0.99629	1;0	0.00159	0.00650	0.01434	0.02381	0.03376	0.04400	0.05481	0.06620	0.07803	0.09010	0.10215	0.11391	0.12506	0.13524	0.14410	0.15116	0.15593	0.15828	0.15824	0.15590	0.15138	0.14485	0.13657	0.12676	0.11562	0.10337	0.09023	0.07646	0.06232	0.04812	0.03419	0.02093	0.00879	0.00088	-0.00192	-0.00362	-0.00518	-0.00590	-0.00656	-0.00717	-0.00771	-0.00823	-0.00874	-0.00969	-0.01057	-0.01177	-0.01266	-0.01485	-0.01482	-0.01236	-0.00740	-0.00002	0.00922	0.01913	0.02865	0.03687	0.04283	0.04626	0.04760	0.04715	0.04501	0.04126	0.03625	0.03050	0.02444	0.01844	0.01286	0.00794	0.00390	0.00106	0.00000];
+
+bobmarley=[1	0.9967791	0.9880288	0.9746469	0.9569265	0.9350861	0.9087391	0.8779705	0.8432844	0.8052067	0.7643216	0.7212294	0.6765198	0.6307867	0.5846265	0.5385779	0.4931514	0.4485135	0.4046373	0.3616616	0.3197542	0.2791502	0.2400940	0.2029667	0.1681517	0.1359921	0.1067735	0.0807331	0.0580972	0.0390223	0.0236543	0.0121992	0.0046015	0.0006589	0.0000156	0.0003023	0.0006472	0.0011314	0.0014243	0.0017606	0.0021501	0.0026072	0.0031554	0.0037893	0.0053215	0.0071560	0.0103792	0.0134332	0.0288084	0.0494142	0.0753714	0.1069343	0.1443748	0.1880674	0.2378653	0.2930582	0.3527783	0.4156489	0.4798537	0.5440151	0.6071984	0.6685012	0.7268533	0.7811621	0.8305707	0.8744720	0.9123332	0.9437502	0.9683842	0.9859635	0.9964955	1; 0	0.0019370	0.0078524	0.0165540	0.0259190	0.0353987	0.0450875	0.0551382	0.0654953	0.0760157	0.0865357	0.0968606	0.1067959	0.1161275	0.1246446	0.1321449	0.1383784	0.1430572	0.1460554	0.1472646	0.1465829	0.1439766	0.1391576	0.1321791	0.1232935	0.1128442	0.1011374	0.0884150	0.0749725	0.0610793	0.0470334	0.0330739	0.0197539	0.0076036	-0.0002746	-0.0030918	-0.0048245	-0.0064308	-0.0071716	-0.0078535	-0.0084886	-0.0090659	-0.0096282	-0.0101731	-0.0111753	-0.0120553	-0.0131381	-0.0138272	-0.0152929	-0.0149679	-0.0127439	-0.0085303	-0.0022197	0.0063036	0.0160370	0.0258708	0.0349446	0.0423810	0.0477362	0.0510559	0.0524023	0.0517720	0.0491987	0.0449337	0.0393680	0.0328967	0.0259134	0.0188187	0.0119171	0.0058086	0.0015377	0.0000000];
+
+%% PERFIS DA ASA E ESTABILIZADORES - OBTIDOS DA AERODINÂMICA
+
+% PERFIL DA ASA
+perfilw=bobmarley;  
+
+% PERFIL DO EST. HORIZONTAL
+perfilh=naca0009;
+
+% PERFIL DO EST. VERTICAL
+perfilv=naca0012;
+
+%% PESOS DOS COMPONENTES - ESTIMATIVA DA CARGAS
+
+Ww=10; % [N] Peso da asa
+Wht=5; % [N] Peso do est. horizontal
+Wvt=5; % [N] Peso do est. vertical
+Wmot=6; % [N] Peso do motor
+Wfus=3; % [N] Peso da fuselagem
+Wlg= 1; % [N] Peso do trem de pouso
+
+CU=20; % [N] Peso da carga útil
+
+%% DADOS GEOMÉTRICOS DOS COMPONENTES - OBTIDOS DA AERODINÂMICA/DESEMPENHO/ESTIMATIVA DA CARGAS
+
+% DADOS DA ASA - OBTIDOS DA AERODINÂMICA
+iw=0; % [deg] Ângulo de incidência da asa
+
+cwr=220/1000; % [m] Corda da raíz da asa
+cwm=150/1000; % [m] Corda do meio da asa
+cwt=110/1000; % [m] Corda da ponta da asa
+
+cw_=(cwr+cwm+cwt)/3; % [m] Corda média aerodinâmica
+
+b1=(500*2)/1000; % [m] Distância entre as cordas do meio 'cm'
+b=2200/1000; % [m] Distância entre as cordas das pontas 'ct' | Envergadura da aeronave;
+
+offset1=20/1000; % [m] Offset da corda do meio 'cm'
+offset2=40/1000; % [m] Offset da corda da ponta 'ct'
+
+
+% DADOS DO EST. HORIZONTAL - ESTIMATIVA DA CARGAS 
+ch=220/1000; % [m] Corda do est horizontal
+bh=440/1000; % [m] Envergadura do est horizontal
+
+% DADOS DO EST. VERTICAL - ESTIMATIVA DA CARGAS 
+cvr=175/1000; % [m] Corda da raíz do est vertical
+cvt=175/1000; % [m] Corda da ponta do est vertical
+bv=110/1000; % [m] Envergadura do est vertical
+
+% DADOS DAS SUPERFÍCIES DE CONTROLE
+
+% Aileron
+cA=cwr/3; % [m] Corda do aileron
+
+pin= 0.6; % [-] Percentual da posição interna no aileron
+pex= 1; % [-] Percentual da posição externa no aileron
+ 
+% Leme
+cR=40/1000; % [m] Corda do leme
+
+% Profundor
+cE=40/1000; % [m] Corda do profundor
+
+
+% DADOS DA FUSELAGEM - DESIGN DA CARGAS
+lf=220/1000; % [m] Comprimento da fuselagem
+df=100/1000; % [m] Altura da fuselagem
+ef=150/1000; % [m] Espessura da fuselagem
+
+% DADOS DO MOTOR E HÉLICE - OBTIDOS DO DESEMPENHO
+dmot=70/1000; % [m] Diâmetro do motor
+lmot=50/1000; % [m] Comprimento do motor
+
+dhel=200/1000; % [m] Diâmetro da hélice
+phel=10/1000; % [m] Passo da hélice 
+
+% TREM DE POUSO DIANTEIRO
+Drodd = 60/1000; % [m] Diâmetro da roda dianteira do trem de pouso
+
+% TREM DE POUSO PRINCIPAL
+bitmg=200/1000; % [m] Bitola do trem de pouso principal
+Drodp = 50/1000; % [m] diâmetro da roda do trem de pouso principal
+
+%% POSICIONAMENTO DOS COMPONENTES - DESIGN DA CARGAS
+
+% ASA
+xw=100/1000; % [m] Distância do CG da asa à referência
+zw=100/1000; % [m] Distância do CG da asa à referencia
+
+% EST. HORIZONTAL
+xht=300/1000; % [m] Distância do CG do est horizontal à referência
+zht=200/1000; % [m] Distância do CG do est horizontal à referência
+
+% EST VERTICAL
+tipoempenagem=1; % 1 para convencional | 2 para cauda dupla
+xvt=290/1000; % [m] Distância do CG do est vertical à referência
+zvt=100/1000; % [m] Distância do CG do est vertical à referência
+
+% COMPARTIMENTO DE CARGA
+% Obs: Admite-se que o CG da fuselagem seja em seu centro geométrico
+xfus=30/1000; % [m] Distância do CG do compartimento de carga à referência
+zfus=25/1000; % [m] Distância do CG do compartimento de carga à referência
+
+% CARGA ÚTIL
+% Obs: Admite-se que o CG da carga útil seja o mesmo da fuselagem
+xcarga=xfus; % [m] Distância do CG da carga útil à referência
+zcarga=zfus; % [m] Distância do CG da carga útil à referência
+
+% TREM DE POUSO PRINCIPAL
+% Obs: Admite-se, nesse primeiro momento, que a posição do CG do trem de
+% pouso é no trem de pouso principal
+
+xmg=150/1000; % [m] Posição do trem de pouso principal
+zmg=-100/1000; % [m] Posição do trem de pouso principal
+
+% CONJUNTO TREM DE POUSO
+xlg=xmg; % [m] Distância do CG do conjunto trem de pouso à referência
+zlg=zmg; % [m] Distância do CG do conjunto trem de pouso à referência
+
+% TREM DE POUSO DIANTEIRO
+xlgd=-25/1000; % [m] Posição do trem de pouso dianteiro
+zlgd=zlg; % [m] Posição do trem de pouso dianteiro
+
+% MOTOR E HÉLICE
+xmot=-100/1000; % [m] Distância do CG do motor à referência
+zmot=100/1000; % [m] Distância do CG do motor à referência
+
+%%                                              ||          CÁLCULOS          ||          
+
+
+%% PARÂMETROS DE POSICIONAMENTO
+
+% ASA
+yw=0; % [m] Distância do CG da asa à referência
+pcgw=0.385; % [-] Percentual do CG da asa em relação a corda no eixo x - Tabela 11.2 Sadraey
+
+% EST. HORIZONTAL
+yht=0;
+pcght=0.35; % [-] Percentual do CG do est. horizontal em relação a Corda - Tabela 11.2 Sadraey
+xhca=xht-((pcght-0.25)*ch);
+zhca=zht;
+
+% EST. VERTICAL
+
+pcgvx=0.35; % [-] Percentual do CG do est. vertical em relação a corda - Tabela 11.2 Sadraey
+pcgvz=0.35*bv; % [-] Percentual do CG do est. vertical em relação a envergadura - Tabela 11.2 Sadraey
+
+
+if tipoempenagem==1 % 1 para convencional | 2 para cauda dupla
+    yvt=0;
+elseif tipoempenagem==2
+    yvt=(bh/2)+max(cvr*(perfilv(2,:)));
+    zvt=zht+pcgvz+max(ch*(perfilh(2,:)));
+end
+
+
+lambdav=cvt/cvr;
+cv_=(2/3)*cvr*((1+lambdav+(lambdav^2))/(1+lambdav));
+
+xvca=xvt-((pcgvx-0.25)*cv_);
+zvca=zvt;
+
+% TREM DE POUSO PRINCIPAL
+ylg=bitmg/2;
+
+% COMPARTIMENTO DE CARGA
+% Obs: Admite-se que o CG da fuselagem seja em seu centro geométrico
+xfus=min(cwr*(perfilw(1,:)))-(pcgw*cw_)+xw+(lf/2); % [m] Distância do CG do compartimento de carga à referência
+
+%% CÁLCULOS DOS CENTROS DE GRAVIDADE CGAFT E CGFOW
+
+Waero=Ww+Wht+Wvt+Wmot+Wfus+Wlg; % [N] Peso da Aeronave
+MTOW=Waero+CU; % [N] Máxima Carga de Decolagem | Maximum Take-Off Weight
+
+XCGfow=((Ww*xw)+(Wht*xht)+(Wvt*xvt)+(Wfus*xfus)+(Wmot*xmot)+(Wlg*xlg)+(CU*xcarga))/MTOW;
+ZCGfow=((Ww*zw)+(Wht*zht)+(Wvt*zvt)+(Wfus*zfus)+(Wmot*zmot)+(Wlg*zlg)+(CU*zcarga))/MTOW;
+
+XCGaft=((Ww*xw)+(Wht*xht)+(Wvt*xvt)+(Wfus*xfus)+(Wmot*xmot)+(Wlg*xlg))/Waero;
+ZCGaft=((Ww*zw)+(Wht*zht)+(Wvt*zvt)+(Wfus*zfus)+(Wmot*zmot)+(Wlg*zlg))/Waero;
+
+
+%% ASA
+% GERAÇÃO DOS PERFIS AERODINÂMICOS VETORES DE PLOTAGEM
+
+% PERFIS DE ASA NÃO ROTACIONADOS (ÂNGULO DE INCIDÊNCIA iw=0)
+xplotasar= cwr*(perfilw(1,:))-(pcgw*cw_)+xw;
+yplotasar=zeros(1,length(xplotasar));
+zplotasar=cwr*(perfilw(2,:))+zw; %
+
+xplotasam= cwm*(perfilw(1,:))-(pcgw*cw_)+offset1+xw;
+yplotasam=zeros(1,length(xplotasam))+(b1/2);
+zplotasam=cwm*(perfilw(2,:))+zw; %
+
+xplotasat= cwt*(perfilw(1,:))-(pcgw*cw_)+offset2+xw;
+yplotasat=zeros(1,length(xplotasat))+(b/2);
+zplotasat=cwt*(perfilw(2,:))+zw; %
+
+% ROTACIONAR PERFIS DA ASA
+
+iw=-iw;
+
+Rot = [cosd(iw) -sind(iw); sind(iw) cosd(iw)]; % Matriz de rotação 2d
+
+xwca=xw-((pcgw-0.25)*cw_); % [m] Distância do CA da asa à referência % Tenho que rotacionar esse ponto em torno do CG
+zwca=zw; % [m] Distância do CA da asa à referência
+
+wca_ = (Rot * [xwca-xw; zwca-zw]);% Aplicar a rotação no CA da asa
+
+xca_=wca_(1,:)+xw;
+zca_=wca_(2,:)+zw;
+
+xr_ = (Rot * [xplotasar-xw; zplotasar-zw]);
+xm_ = (Rot * [xplotasam-xw; zplotasam-zw]);
+xt_ = (Rot * [xplotasat-xw; zplotasat-zw]);
+
+
+plot3(xr_(1,:)+xw,yplotasar,xr_(2,:)+zw,'k-')
+hold on
+plot3(xm_(1,:)+xw,yplotasam,xm_(2,:)+zw,'k-')
+plot3(xt_(1,:)+xw,yplotasat,xt_(2,:)+zw,'k-')
+
+plot3(xm_(1,:)+xw,-yplotasam,xm_(2,:)+zw,'k-')
+plot3(xt_(1,:)+xw,-yplotasat,xt_(2,:)+zw,'k-')
+
+perfraiz=[(xr_(1,:)+xw)',(yplotasar)',(xr_(2,:)+zw)'];
+perfmeiod=[(xm_(1,:)+xw)',(yplotasam)',(xm_(2,:)+zw)'];
+perfpontad=[(xt_(1,:)+xw)',(yplotasat)',(xt_(2,:)+zw)'];
+
+perfmeioe=[(xm_(1,:)+xw)',(-yplotasam)',(xm_(2,:)+zw)'];
+perfpontae=[(xt_(1,:)+xw)',(-yplotasat)',(xt_(2,:)+zw)'];
+
+% CÁLCULO DOS PONTOS DO AILERON 
+
+yi=pin*(b/2);
+yo=pex*(b/2);
+
+m =((max(xplotasam)-max(xplotasat))/((b1/2)-(b/2)));
+
+syms yfnc
+
+xfnc=m*yfnc+(max(xplotasam))- m*(b1/2); % Equação da reta da base do aileron
+xfunccA =xfnc-cA; % Equação da reta do topo do aileron
+
+% Encontrar pontos do aileron
+ptoailinf=subs(xfnc,pin*(b/2));
+ptoailexf=subs(xfnc,pex*(b/2));
+ptoailind=subs(xfunccA,pin*(b/2));
+ptoailexd=subs(xfunccA,pex*(b/2));
+
+hold on
+
+%% CONTORNO DA ASA
+
+% Asa + Aileron
+xasaail = [min(xplotasar) min(xplotasam) min(xplotasat) max(xplotasat) ptoailexf ptoailexd ptoailind ptoailinf ptoailexf max(xplotasam) max(xplotasar)];
+yasaail = [0 b1/2 b/2 b/2 pex*(b/2) pex*(b/2) pin*(b/2) pin*(b/2) pex*(b/2) b1/2 0];
+zasaail = [zw zw zw zw zw zw zw zw zw zw zw];
+
+% Asa + Aileron rotacionados
+
+theta_x = deg2rad(0); % Rotação em torno do eixo X
+theta_y = deg2rad(-iw); % Rotação em torno do eixo Y
+theta_z = deg2rad(0); % Rotação em torno do eixo Z
+
+Rx = [1,0,0;0,cos(theta_x),-sin(theta_x);0,sin(theta_x),cos(theta_x)]; % Matriz de rotação em x
+Ry = [cos(theta_y),0,sin(theta_y);0,1,0;-sin(theta_y),0,cos(theta_y)]; % Matriz de rotação em y
+Rz = [cos(theta_z),-sin(theta_z),0;sin(theta_z),cos(theta_z),0;0,0,1]; % Matriz de rotação em z
+
+R = Rz * Ry * Rx; % Matriz combinada
+
+controt = R * [xasaail-xw; yasaail-yw; zasaail-zw]; % Aplicação da rotação
+
+contasax=controt(1,:)+xw;
+contasay=controt(2,:)+yw;
+contasaz=controt(3, :)+zw;
+
+ctasax=[contasax contasax];
+ctasay=[contasay -contasay];
+ctasaz=[contasaz contasaz];
+
+contornoasa=double([ctasax', ctasay', ctasaz']); % verificar com calma
+
+plot3(vpa(ctasax),vpa(ctasay),vpa(ctasaz),'k-'); 
+
+%% ESTABILIZADOR HORIZONTAL
+
+% Perfis do est horizontal
+
+xesth= ch*(perfilh(1,:))-(pcght*ch)+xht;
+zesth= ch*(perfilh(2,:))+zht;
+
+plot3(xesth,zeros(1,length(xesth)),zesth,'k')
+plot3(xesth,zeros(1,length(xesth))+(bh/2),zesth,'k')
+plot3(xesth,zeros(1,length(xesth))-(bh/2),zesth,'k')
+
+perfhoraiz=[(xesth)',(zeros(1,length(xesth)))',(zesth)'];
+
+perfhorpontad=[(xesth)',(zeros(1,length(xesth))+(bh/2))',(zesth)'];
+perfhorpontae=[(xesth)',(zeros(1,length(xesth))-(bh/2))',(zesth)'];
+
+% Contorno do est horizontal
+
+xhprof = [min(xesth) max(xesth) max(xesth) max(xesth)-cE max(xesth)-cE max(xesth) max(xesth) min(xesth) min(xesth)];
+yhprof = [bh/2 bh/2 -(bh/2) -bh/2 bh/2 bh/2 -(bh/2) -(bh/2) bh/2];
+zhprof = [zht zht zht zht zht zht zht zht zht];
+
+plot3(xhprof,yhprof,zhprof,'k-') % Est h + profundor
+
+contornoesth=[xhprof;yhprof;zhprof];
+contornoesth=contornoesth';
+
+%% ESTABILIZADOR VERTICAL
+
+% Perfis do est vertical
+xplotestvr= cvr*(perfilv(1,:))+xvt-cvr+((1-pcgvx)*cv_); %
+yplotestvr= cvr*(perfilv(2,:)); 
+
+xplotestvt= cvt*(perfilv(1,:))+xvt+(cvr-cvt)-cvr+((1-pcgvx)*cv_);
+yplotestvt= cvt*(perfilv(2,:)); 
+
+plot3(xplotestvr,yplotestvr+yvt,zvt*ones(1,length(xplotestvr))-pcgvz,'k')
+plot3(xplotestvr,yplotestvr-yvt,zvt*ones(1,length(xplotestvr))-pcgvz,'k')
+
+plot3(xplotestvt,yplotestvt+yvt,zvt*ones(1,length(xplotestvt))+bv-pcgvz,'k')
+plot3(xplotestvt,yplotestvt-yvt,zvt*ones(1,length(xplotestvt))+bv-pcgvz,'k')
+
+
+perfilvr=[xplotestvr',(yplotestvr+yvt)',(zvt*ones(1,length(xplotestvr))-pcgvz)'];
+perfilvt=[xplotestvt',(yplotestvt+yvt)',(zvt*ones(1,length(xplotestvt))+bv-pcgvz)'];
+
+% Contorno do est. vertical
+
+xplotestv=[min(xplotestvr) min(xplotestvt) max(xplotestvt)-cR max(xplotestvr)-cR max(xplotestvr) max(xplotestvt) max(xplotestvt)-cR max(xplotestvr)-cR min(xplotestvr)];
+zplotestv=[-pcgvz bv-pcgvz bv-pcgvz -pcgvz -pcgvz bv-pcgvz bv-pcgvz -pcgvz -pcgvz] + zvt;%
+
+plot3(xplotestv,zeros(length(xplotestv))+yvt,zplotestv,'k')
+plot3(xplotestv,zeros(length(xplotestv))-yvt,zplotestv,'k')
+
+contornoestv=[(xplotestv)',((zeros(1,length(xplotestv)))+yvt)',(zplotestv)'];
+
+%% COMPARTIMENTO DE CARGA
+
+xplotfus=[lf/2 lf/2 -lf/2 -lf/2 lf/2]+xfus;
+yplotfus=[0 0 0 0 0];
+zplotfus=[-df/2 df/2 df/2 -df/2 -df/2]+zfus;
+
+xffus=[xfus xfus xfus xfus xfus]+(lf/2);
+yffus=[(-ef/2) (-ef/2) (ef/2) (ef/2) (-ef/2)];
+zffus=[(df/2) (-df/2) (-df/2) (df/2) (df/2)]+zfus;
+
+xccarga=[xplotfus xplotfus xffus xffus-(lf)];
+yccarga=[yplotfus+(ef/2) yplotfus-(ef/2) yffus yffus];
+zccarga=[zplotfus zplotfus zffus zffus];
+
+plot3(xccarga,yccarga,zccarga,'k-')
+
+CARGA=[xccarga;yccarga;zccarga];
+CARGA=CARGA';
+
+%% TREM DE POUSO
+
+plot3([xlg xlg xlg xlg],[ylg ylg -ylg -ylg],[zlg+(Drodp/2) zfus-(df/2) zfus-(df/2) zlg+(Drodp/2)],'k-')
+
+tlg = linspace(0, 2*pi, 100); % Criando um vetor de valores de t de 0 a 2*pi
+
+% Plotando a circunferência
+
+plot3(xlg,ylg,zlg)
+plot3(xlg,-ylg,zlg)
+
+plot3(xlg + (Drodp/2) * cos(tlg),ylg*ones(1,length(tlg)), (zlg + (Drodp/2) * sin(tlg))+(Drodp/2), 'k-')
+plot3(xlg + (Drodp/2) * cos(tlg),-ylg*ones(1,length(tlg)), (zlg + (Drodp/2) * sin(tlg))+(Drodp/2), 'k-')
+plot3(xlgd + (Drodd/2) * cos(tlg),0*ones(1,length(tlg)), (zlgd + (Drodd/2) * sin(tlg))+(Drodd/2), 'k-')
+
+tremd=[(xlg + (Drodp/2) * cos(tlg))',(ylg*ones(1,length(tlg)))',((zlg + (Drodp/2) * sin(tlg))+(Drodp/2))'];
+treme=[(xlg + (Drodp/2) * cos(tlg))',(-ylg*ones(1,length(tlg)))',((zlg + (Drodp/2) * sin(tlg))+(Drodp/2))'];
+tremc=[(xlgd + (Drodd/2) * cos(tlg))',(0*ones(1,length(tlg)))',((zlgd + (Drodd/2) * sin(tlg))+(Drodd/2))'];
+
+%% MOTOR
+
+xplotmotor=[-lmot/2 -lmot/2 lmot/2 lmot/2 -lmot/2 -lmot/2 -lmot/2-phel -lmot/2-phel -lmot/2 -lmot/2]+xmot;
+zplotmotor=[dmot/2 -dmot/2 -dmot/2 dmot/2 dmot/2 dhel/2 dhel/2 -dhel/2 -dhel/2 dhel/2]+zmot;
+
+plot3(xplotmotor,zeros(1,length(xplotmotor)),zplotmotor,'k-')
+
+MOTOR=[xplotmotor',(zeros(1,length(xplotmotor)))',zplotmotor'];
+
+%% PLOTAGEM DOS CENTROS DE GRAVIDADE
+
+plot3(XCGfow,0,ZCGfow,'r+') % CG A FRENTE
+plot3(XCGfow,0,ZCGfow,'ro') % CG A FRENTE
+
+plot3(XCGaft,0,ZCGaft,'g+') % CG ATRÁS
+plot3(XCGaft,0,ZCGaft,'go') % CG ATRÁS 
+
+plot3(xw,0,zw,'k+') % CG ASA
+plot3(xw,0,zw,'ko') % CG ASA
+
+plot3(xht,0,zht,'k+') % CG EST H
+plot3(xht,0,zht,'ko') % CG EST H
+
+plot3(xvt,0,zvt,'k+') % CG EST V
+plot3(xvt,0,zvt,'ko') % CG EST V
+
+plot3(xfus,zeros(length(xfus)),zfus,'ko') % CG COMPART CARGA
+plot3(xfus,zeros(length(xfus)),zfus,'k+') % CG COMPART CARGA
+
+plot3(xmot,zeros(length(xmot)),zmot,'ko') % CG MOTOR
+plot3(xmot,zeros(length(xmot)),zmot,'k+') % CG MOTOR
+
+%% PLOTAGEM DOS CENTROS AERODINÂMICOS
+
+plot3(xca_,0,zca_,'bo')
+plot3(xca_,0,zca_,'b.')
+
+plot3(xhca,0,zhca,'bo')
+plot3(xhca,0,zhca,'b.')
+
+plot3(xvca,0,zvca,'bo')
+plot3(xvca,0,zvca,'b.')
+
+%% CÁLCULO DO lw, lht E lvt
+
+lw=XCGaft-xca_; 
+lht=xhca-XCGaft;
+lvt=xvca-XCGaft;
+
+%% CÁLCULO DISTÂNCIAS EM RELAÇÃO AO MG
+
+DXcgmg= abs(xmg-XCGfow); % [m] Distância no eixo x do CG para o MG
+DXwacmg= abs(xmg-xca_); % [m] Distância no eixo x do CA da asa para o MG 
+DXhacmg= abs(xhca-xmg); % [m] Distância no eixo x do CA do est. horizontal para o MG
+
+DZDmg= abs(zmot-zmg); % [m] Distância no eixo z do arrasto para o MG
+DZTmg= abs(zmot-zmg); % [m] Distância no eixo z da Tração para o MG
+DZcgmg= abs(XCGfow-zmg); % [m] Distância no eixo z do CG para o MG % USAR
+
+%% MOMENTOS DE INÉRCIAS - LIVRO RAYMER PG.443
+
+Ltot=abs( max([max(xplotestv) max(xesth)]) - xmot );
+
+g=9.81;
+
+RY_= 0.38; % [-] Raio de giro no eixo y: Tabela 16.1 - Raymer
+
+% MOMENTO DE INÉRCIA EM RELAÇÃO AO CG
+Iyy=((Ltot^2)*MTOW*(RY_^2))/(4*g);
+
+% MOMENTOS DE INÉRCIAS EM RELAÇÃO AO MG (TREM DE POUSO PRINCIPAL)
+Iyymg=Iyy+MTOW*DZcgmg;
+
+
+%% CONFIGURAÇÃO DO GRÁFICO
+grid on
+
+title({'AeroRoots','IFMA - CAMPUS SANTA INÊS'});
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
+
+str = sprintf('lw = %.2f m\nlht = %.2f m\nlvt = %.2f m ', lw, lht, lvt);
+str2 = sprintf('DXcgmg= %.2f m\nDXwacmg = %.2f m\nDXhacmg = %.2f m\n\nDZDmg = %.2f m\nDZTmg = %.2f m \nDZcgmg = %.2f m', DXcgmg, DXwacmg, DXhacmg,DZDmg,DZTmg,DZcgmg);
+str3 = sprintf('Iyy = %.2f m⁴\n\nIyymg = %.2f m⁴', Iyy,Iyymg);
+str4 = sprintf('Waero= %.2f N\nCU = %.2f N\nMTOW = %.2f N', Waero,CU,MTOW);
+
+annotation('textbox', [.8 .7 .2 .2], 'String', str, ...
+    'FitBoxToText', 'on', 'BackgroundColor', 'w', 'EdgeColor', 'k', ...
+    'FontSize', 9) 
+
+annotation('textbox', [.05 .1 .2 .2], 'String', str2, ...
+    'FitBoxToText', 'on', 'BackgroundColor', 'w', 'EdgeColor', 'k', ...
+    'FontSize', 7) 
+
+annotation('textbox', [.8 .0 .2 .15], 'String', str3, ...
+    'FitBoxToText', 'on', 'BackgroundColor', 'w', 'EdgeColor', 'k', ...
+    'FontSize', 7) 
+
+annotation('textbox', [.05 .8 .1 .1], 'String', str4, ...
+    'FitBoxToText', 'on', 'BackgroundColor', 'w', 'EdgeColor', 'k', ...
+    'FontSize', 7) 
+
+axis equal
+
+%% GERAÇÃO DE ARQUIVOS PARA LETURA EM SOFTWARE DE MODELAGEM
+
+ASA=[perfpontae;perfmeioe;perfraiz;perfmeiod;perfpontad;perfmeiod;perfraiz;contornoasa];
+ESTH=[contornoesth;perfhorpontad;perfhoraiz;perfhorpontae];
+ESTV=[perfilvr;contornoestv;perfilvt];
+TREM=[treme;tremc;tremd];
+
+% INVENTER NO EIXO X PARA FICAR MAIS APROPRIADO AO SOFTWARE DE MODELAGEM
+ASA(:, 1) = -ASA(:, 1);
+ESTH(:, 1) = -ESTH(:, 1);
+ESTV(:, 1) = -ESTV(:, 1);
+TREM(:, 1) = -TREM(:, 1);
+CARGA(:, 1) = -CARGA(:, 1);
+MOTOR(:, 1) = -MOTOR(:, 1);
+
+perfpontad(:, 1)=-perfpontad(:, 1);
+perfmeiod(:, 1)=-perfmeiod(:, 1);
+perfraiz(:, 1)=-perfraiz(:, 1);
+contornoasa(:, 1)=-contornoasa(:, 1);
+
+perfhorpontad(:, 1)=-perfhorpontad(:, 1);
+perfhoraiz(:, 1)=-perfhoraiz(:, 1);
+contornoesth(:, 1)=-contornoesth(:, 1);
+
+perfilvr(:, 1)=-perfilvr(:, 1);
+perfilvt(:, 1)=-perfilvt(:, 1);
+contornoestv(:, 1)=-contornoestv(:, 1);
+
+% CRIAÇÃO DOS ARQUIVOS 
+
+writematrix(perfpontad*1000,'perfpontae.xls')
+writematrix(perfmeiod*1000,'perfmeioe.xls')
+writematrix(perfraiz*1000,'perfraiz.xls')
+writematrix(contornoasa*1000,'contornoasa.xls')
+
+writematrix(perfhorpontad*1000,'perfhorpontae.xls')
+writematrix(perfhoraiz*1000,'perfhoraiz.xls')
+writematrix(contornoesth*1000,'contornoesth.xls')
+
+writematrix(perfilvr*1000,'perfilvr.xls')
+writematrix(perfilvt*1000,'perfilvt.xls')
+writematrix(contornoestv*1000,'contornoestv.xls')
+
+writematrix(ASA*1000,'ASA.xls') % GERANDO VETOR E CONVERTENDO DE M PARA MM
+writematrix(ESTH*1000,'ESTH.xls')
+writematrix(ESTV*1000,'ESTV.xls')
+writematrix(TREM*1000,'TREM.xls')
+writematrix(CARGA*1000,'CARGA.xls')
+writematrix(MOTOR*1000,'MOTOR.xls')
+
+% %% PLOTAR PARÂMETROS DO REGULAMENTO - EM DESENVOLVIMENTO
+% 
+% % CATEGORIA REGULAR - AVIÃO DEVE FICAR DENTRO DE UM CONE PREDETERMINADO
+% % Parâmetros do cone
+% hcone = 20; % Altura do cone
+% Bcone = 20;  % Raio da base do cone
+% 
+% % Posição do cone
+% x0cone = 5; % Posição no eixo X
+% y0cone = 0; % Posição no eixo Y
+% 
+% % Geração da malha para o cone
+% theta = linspace(0, 2*pi, 50); % Ângulo azimutal
+% rcone = linspace(0, Bcone, 50);        % Raio da base
+% [Rcone, Tcone] = meshgrid(rcone, theta);
+% 
+% % Coordenadas cilíndricas para cartesianas
+% Xcone = Rcone .* cos(Tcone) + x0cone; % Deslocamento no eixo X
+% Ycone = Rcone .* sin(Tcone) + y0cone; % Deslocamento no eixo Y
+% Zcone = hcone * (1 - Rcone / Bcone);
+% 
+% % Plotar o cone
+% hold on
+% surf(Xcone, Ycone, Zcone);
+% 
+% % Ajustar propriedades da plotagem
+% colormap('summer');   % Escolher o mapa de cores
+% shading interp;       % Suavizar o sombreamento
+% alpha(0.5);           % Tornar o cone translúcido
+
